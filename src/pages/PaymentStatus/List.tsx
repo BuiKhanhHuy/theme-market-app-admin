@@ -1,9 +1,13 @@
-import React from 'react'
+import { PaymentStatusListContainer } from "../../containers/PaymentStatus";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: PaymentStatusListContainer */}
+      <PaymentStatusListContainer />
+      {/* End: PaymentStatusListContainer */}
+    </>
+  );
+};
 
 export default List

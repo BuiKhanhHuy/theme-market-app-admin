@@ -1,9 +1,13 @@
-import React from 'react'
+import { ServicePackageListContainer } from "../../containers/ServicePackage";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: ServicePackageListContainer */}
+      <ServicePackageListContainer />
+      {/* End: ServicePackageListContainer */}
+    </>
+  );
+};
 
 export default List

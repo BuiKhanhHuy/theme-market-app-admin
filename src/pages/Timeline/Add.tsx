@@ -1,9 +1,15 @@
 import React from 'react'
+import { TimelineAddContainer } from '../../containers/Timeline'
 
 const Add: React.FC = () => {
   return (
-    <div>AddApproach</div>
+    <>
+      {/* Start: TimelineAddContainer */}
+      <TimelineAddContainer />
+      {/* End: TimelineAddContainer */}
+    </>
   )
 }
+
 
 export default Add

@@ -1,8 +1,13 @@
 import React from 'react'
+import { TimelineEditContainer } from '../../containers/Timeline'
 
 const Edit: React.FC = () => {
     return (
-        <div>Edit</div>
+        <>
+            {/* Start: TimelineEditContainer */}
+            <TimelineEditContainer />
+            {/* End: TimelineEditContainer */}
+        </>
     )
 }
 

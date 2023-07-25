@@ -1,8 +1,13 @@
 import React from 'react'
+import { TagEditContainer } from '../../containers/Tag'
 
 const Edit: React.FC = () => {
     return (
-        <div>Edit</div>
+        <>
+            {/* Start: TagEditContainer */}
+            <TagEditContainer />
+            {/* End: TagEditContainer */}
+        </>
     )
 }
 

@@ -1,9 +1,13 @@
-import React from 'react'
+import { TagListContainer } from "../../containers/Tag";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: TagListContainer */}
+      <TagListContainer />
+      {/* End: TagListContainer */}
+    </>
+  );
+};
 
 export default List

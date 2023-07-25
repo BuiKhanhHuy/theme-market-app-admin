@@ -1,9 +1,13 @@
-import React from 'react'
+import { ContactTypeListContainer } from "../../containers/ContactType";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: ContactTypeListContainer */}
+      <ContactTypeListContainer />
+      {/* End: ContactTypeListContainer */}
+    </>
+  );
+};
 
 export default List

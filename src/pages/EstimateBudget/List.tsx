@@ -1,9 +1,13 @@
-import React from 'react'
+import { EstimateBudgetListContainer } from "../../containers/EstimateBudget";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: EstimateBudgetListContainer */}
+      <EstimateBudgetListContainer />
+      {/* End: EstimateBudgetListContainer */}
+    </>
+  );
+};
 
 export default List

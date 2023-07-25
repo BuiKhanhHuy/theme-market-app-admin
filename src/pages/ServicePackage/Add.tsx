@@ -1,9 +1,15 @@
 import React from 'react'
+import { ServicePackageAddContainer } from '../../containers/ServicePackage'
 
 const Add: React.FC = () => {
   return (
-    <div>AddApproach</div>
+    <>
+      {/* Start: ServicePackageAddContainer */}
+      <ServicePackageAddContainer />
+      {/* End: ServicePackageAddContainer */}
+    </>
   )
 }
+
 
 export default Add

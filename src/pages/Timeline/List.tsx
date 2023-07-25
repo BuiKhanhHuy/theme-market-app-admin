@@ -1,9 +1,13 @@
-import React from 'react'
+import { TimelineListContainer } from "../../containers/Timeline";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: TimelineListContainer */}
+      <TimelineListContainer />
+      {/* End: TimelineListContainer */}
+    </>
+  );
+};
 
 export default List

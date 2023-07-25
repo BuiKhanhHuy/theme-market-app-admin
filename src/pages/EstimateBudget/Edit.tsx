@@ -1,8 +1,13 @@
 import React from 'react'
+import { EstimateBudgetEditContainer } from '../../containers/EstimateBudget'
 
 const Edit: React.FC = () => {
     return (
-        <div>Edit</div>
+        <>
+            {/* Start: EstimateBudgetEditContainer */}
+            <EstimateBudgetEditContainer />
+            {/* End: EstimateBudgetEditContainer */}
+        </>
     )
 }
 

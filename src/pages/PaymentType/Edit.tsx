@@ -1,8 +1,13 @@
 import React from 'react'
+import { PaymentTypeEditContainer } from '../../containers/PaymentType'
 
 const Edit: React.FC = () => {
     return (
-        <div>Edit</div>
+        <>
+            {/* Start: PaymentTypeEditContainer */}
+            <PaymentTypeEditContainer />
+            {/* End: PaymentTypeEditContainer */}
+        </>
     )
 }
 

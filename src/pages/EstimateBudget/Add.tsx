@@ -1,9 +1,15 @@
 import React from 'react'
+import { EstimateBudgetAddContainer } from '../../containers/EstimateBudget'
 
 const Add: React.FC = () => {
   return (
-    <div>AddApproach</div>
+    <>
+      {/* Start: EstimateBudgetAddContainer */}
+      <EstimateBudgetAddContainer />
+      {/* End: EstimateBudgetAddContainer */}
+    </>
   )
 }
+
 
 export default Add
