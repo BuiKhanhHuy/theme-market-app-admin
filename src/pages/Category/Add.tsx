@@ -1,9 +1,15 @@
 import React from 'react'
+import { CategoryAddContainer } from '../../containers/Category'
 
 const Add: React.FC = () => {
   return (
-    <div>AddApproach</div>
+    <>
+      {/* Start: CategoryAddContainer */}
+      <CategoryAddContainer />
+      {/* End: CategoryAddContainer */}
+    </>
   )
 }
+
 
 export default Add

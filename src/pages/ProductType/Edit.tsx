@@ -1,8 +1,13 @@
 import React from 'react'
+import { ProductTypeEditContainer } from '../../containers/ProductType'
 
 const Edit: React.FC = () => {
     return (
-        <div>Edit</div>
+        <>
+            {/* Start: ProductTypeEditContainer */}
+            <ProductTypeEditContainer />
+            {/* End: ProductTypeEditContainer */}
+        </>
     )
 }
 

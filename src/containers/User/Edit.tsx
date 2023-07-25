@@ -1,8 +1,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import { Card, Spin, theme } from 'antd'
-import { EditFormInterface } from '../../components/user/interfaces';
-import { UserEditForm } from '../../components/user';
+import { EditFormInterface } from '../../components/User/interfaces';
+import { UserEditForm } from '../../components/User';
 import { userService } from '../../services';
 
 const Edit: React.FC = () => {

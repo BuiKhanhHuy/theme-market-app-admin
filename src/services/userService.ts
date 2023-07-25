@@ -8,32 +8,34 @@ type ParamsType = {
   isActive?: boolean | null;
 };
 
-const userService = {
-  getUserList: (params: ParamsType) => {
-    const url = 'users/';
+export const MODEL_URL = 'users';
 
-    return httpRequest.get(url, { params: params });
-  },
-  //   addEducationsDetail: (data) => {
-  //     const url = `api/info/web/educations-detail/`;
+export const getUserList = (params: ParamsType) => {
+  const url = MODEL_URL + '/';
 
-  //     return httpRequest.post(url, data);
-  //   },
-  getUserById: (id: number | string) => {
-    const url = `users/${id}/`;
-
-    return httpRequest.get(url);
-  },
-  //   updateEducationDetailById: (id: IdType, data) => {
-  //     const url = `api/info/web/educations-detail/${id}/`;
-
-  //     return httpRequest.put(url, data);
-  //   },
-  //   deleteEducationDetailById: (id: IdType) => {
-  //     const url = `api/info/web/educations-detail/${id}/`;
-
-  //     return httpRequest.delete(url);
-  //   },
+  return httpRequest.get(url, { params: params });
 };
 
-export default userService;
+//   addEducationsDetail: (data) => {
+//     const url = `api/info/web/educations-detail/`;
+
+//     return httpRequest.post(url, data);
+//   },
+
+export const getUserById = (id: number | string) => {
+  const url = MODEL_URL + `/${id}/`;
+
+  return httpRequest.get(url);
+};
+
+//   updateEducationDetailById: (id: IdType, data) => {
+//     const url = `api/info/web/educations-detail/${id}/`;
+
+//     return httpRequest.put(url, data);
+//   },
+
+//   deleteEducationDetailById: (id: IdType) => {
+//     const url = `api/info/web/educations-detail/${id}/`;
+
+//     return httpRequest.delete(url);
+//   },

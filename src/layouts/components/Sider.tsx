@@ -31,7 +31,7 @@ function getItem(
 const items: MenuItem[] = [
     getItem('Dashboard', '1', <PieChartOutlined />),
     getItem('Profiles', 'sub1', <UserOutlined />, [
-        getItem(<Link to="/confession">Confession</Link>, '2'),
+        getItem(<Link to="/profession">Profession</Link>, '2'),
         getItem(<Link to="/user">User</Link>, '3'),
     ]),
     getItem('Products', 'sub2', <DropboxOutlined />, [

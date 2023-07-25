@@ -1,34 +1,18 @@
 import React from 'react'
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Control } from 'react-hook-form';
-import { Button, Form, Space, Upload, UploadFile } from 'antd'
-import { UploadOutlined } from '@ant-design/icons';
+import { Form, message } from 'antd'
 import { ROLE } from '../../configs/settings';
 import { AddFormInterface } from './interfaces';
 import FormAction from '../common/FormAction';
-import InputCustom from '../formControls/InputCustom';
-import PasswordInputCustom from '../formControls/PasswordInputCustom';
-import SingleCheckboxCustom from '../formControls/SingleCheckboxCustom';
-import AutoCompleteCustom from '../formControls/AutoCompleteCustom';
+import SelectCustom from '../formControls/SelectCustom';
 import AutoCompleteServerSearch from '../formControls/AutoCompleteServerSearch';
+import InputCustom from '../formControls/InputCustom';
+import SingleCheckboxCustom from '../formControls/SingleCheckboxCustom';
+import { userService } from '../../services';
 
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 24 },
 };
-
-const schema = yup.object().shape({
-  email: yup.string().required("Email is required").email().max(128, "Exceeded the allowable length"),
-  firstName: yup.string().required("First name is required").max(50, "Exceeded the allowable length"),
-  lastName: yup.string().required("Last name is required").max(100, 'Exceeded the allowable length'),
-  professionId: yup.number().default(null).nullable(),
-  roleName: yup
-    .string().required("Role name is required"),
-  password: yup.string().required("Password is required"),
-  isActive: yup.boolean().default(false),
-  isEmailVerified: yup.boolean().default(false)
-})
 
 interface AddFormProps {
   onSubmit: (data: AddFormInterface) => void;
@@ -37,94 +21,98 @@ interface AddFormProps {
 const AddForm: React.FC<AddFormProps> = ({ onSubmit }) => {
   const [form] = Form.useForm();
 
-  const { handleSubmit, reset, control } = useForm<AddFormInterface>({
-    resolver: yupResolver(schema),
+  const onFinish = (values: any) => {
+    message.success('Submit success!');
+    onSubmit(values)
+  };
 
-  });
+  const onFinishFailed = () => {
+    message.error('Submit failed!');
+  };
 
   const handleResetForm = () => {
-    reset();
   }
-
-  const fileList: UploadFile[] = [
-    {
-      uid: '-1',
-      name: 'yyy.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    }
-  ];
-
-  // const onSubmit: SubmitHandler<FormInterface> = (data) => {
-  //   console.log(data);
-  // };
 
   return (
     <Form
       {...layout}
+      initialValues={{
+        isEmailVerified: false,
+        isActive: false,
+      }}
       form={form}
-      onFinish={handleSubmit(onSubmit)}
       style={{ maxWidth: 1000 }}
-
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
     >
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-        <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture"
-          defaultFileList={[...fileList]}
-        >
-          <Button icon={<UploadOutlined />}>Upload avatar</Button>
-        </Upload>
-      </Form.Item>
+      {/* Start: Email */}
       <InputCustom
-        control={control as Control<AddFormInterface>}
         name='email'
         label='Email'
-        required={true}
+        rules={[{ required: true }, { type: 'email', max: 128 }]}
         placeholder='Enter email'
       />
+      {/* End: Email */}
+
+      {/* Start: First name */}
       <InputCustom
-        control={control as Control<AddFormInterface>}
         name='firstName'
         label='First name'
-        required={true}
+        rules={[{ required: true }, { type: 'string', max: 50 }]}
         placeholder='Enter first name'
       />
+      {/* End: First name */}
+
+      {/* Start: Last name */}
       <InputCustom
-        control={control as Control<AddFormInterface>}
         name='lastName'
         label='Last name'
-        required={true}
+        rules={[{ required: true }, { type: 'string', max: 100 }]}
         placeholder='Enter last name'
       />
-      <AutoCompleteServerSearch
-        control={control as Control<AddFormInterface>}
-        name='professionId'
-        label='Profession'
-        placeholder='Choose profession'
-      />
-      <PasswordInputCustom
-        control={control as Control<AddFormInterface>}
+      {/* End: Last name */}
+
+      {/* Start: Password */}
+      <InputCustom
         name='password'
         label='Password'
-        required={true}
+        rules={[{ required: true }, { type: 'string', max: 100 }]}
         placeholder='Enter password'
+        type='password'
       />
-      <AutoCompleteCustom
-        control={control as Control<AddFormInterface>}
+      {/* End: Password */}
+
+      {/* Start: Profession id */}
+      <AutoCompleteServerSearch
+        name='professionId'
+        label='Profession'
+        placeholder="Choose profession"
+        modelUrl={userService.MODEL_URL}
+      />
+      {/* End: Profession id */}
+
+      {/* Start: Role name */}
+      <SelectCustom
         name='roleName'
         label='Role'
-        required={true}
-        options={[{ id: ROLE.ADMIN, name: "Admin" }, { id: ROLE.CUSTOMER, name: "Customer" }]}
+        rules={[{ required: true }, { type: 'string' }]}
         placeholder='Choose role'
+        options={
+          [{ id: ROLE.ADMIN, name: "Admin" }, { id: ROLE.CUSTOMER, name: "Customer" }]
+        }
       />
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-        <Space direction='vertical' size="middle">
-          <SingleCheckboxCustom control={control as Control<AddFormInterface>} name='isEmailVerified' label='Email verified' />
-          <SingleCheckboxCustom control={control as Control<AddFormInterface>} name='isActive' label='Active' />
-        </Space>
+      {/* End: Role name */}
+
+      <Form.Item wrapperCol={{ offset: 6 }}>
+        {/* Start: Email verified */}
+        <SingleCheckboxCustom name="isEmailVerified" label='Email verified' rules={[{ required: false }]} />
+        {/* End: Email verified */}
+
+        {/* Start: Active */}
+        <SingleCheckboxCustom name="isActive" label='Active' rules={[{ required: false }]} />
+        {/* End: Active */}
       </Form.Item>
+
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
         {/* Start: FormAction */}
         <FormAction onReset={handleResetForm} />

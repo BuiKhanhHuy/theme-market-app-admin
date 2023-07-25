@@ -1,9 +1,13 @@
-import React from 'react'
+import { ProductTypeListContainer } from "../../containers/ProductType";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: ProductTypeListContainer */}
+      <ProductTypeListContainer />
+      {/* End: ProductTypeListContainer */}
+    </>
+  );
+};
 
 export default List

@@ -1,73 +1,65 @@
 import React from 'react'
-import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, SubmitHandler, Control } from 'react-hook-form';
-import { Button, Col, Form, Row, Space } from 'antd'
+import { Button, Col, Form, Row, Space, message } from 'antd'
 import {
     SearchOutlined,
     ReloadOutlined
 } from '@ant-design/icons';
 import { ROLE } from '../../configs/settings';
 import { FilterFormInterface } from './interfaces';
+import { userService } from '../../services';
 import InputCustom from '../formControls/InputCustom';
 import RadioCustom from '../formControls/RadioCustom';
 import AutoCompleteServerSearch from '../formControls/AutoCompleteServerSearch';
 
-const schema = yup.object().shape({
-    kw: yup
-        .string()
-        .default("")
-        .max(150, 'Must not exceed 150 characters'),
-    professionId: yup.number().default(null).nullable(),
-    roleName: yup
-        .string().default(null).nullable(),
-    isEmailVerified: yup.boolean().default(null).nullable(),
-    isActive: yup.boolean().default(null).nullable(),
-})
+interface FilterFormProps {
+    onSubmit: (data: FilterFormInterface) => void;
+}
 
-const FilterForm = () => {
+const FilterForm: React.FC<FilterFormProps> = ({ onSubmit }) => {
     const [form] = Form.useForm();
 
-    const { handleSubmit, control } = useForm<FilterFormInterface>({
-        resolver: yupResolver(schema),
-        defaultValues: {
-            roleName: null,
-            isEmailVerified: null,
-            isActive: null
-        }
-    });
-
-    const onSubmit: SubmitHandler<FilterFormInterface> = (data) => {
-        console.log(data);
+    const onFinish = (values: any) => {
+        message.success('Submit success!');
+        onSubmit(values)
     };
+
+    const handleResetForm = () => {
+        form.resetFields();
+    }
 
     return (
         <Form
-            onFinish={handleSubmit(onSubmit)}
-
+            onFinish={onFinish}
             form={form}
-            layout="vertical">
+            layout="vertical"
+            initialValues={{
+                kw: "",
+                professionId: "",
+                roleName: "",
+                isActive: "",
+                isEmailVerified: ""
+            }}
+        >
             <Row gutter={{ xs: 2, sm: 16, md: 24, lg: 32 }}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={7}>
                     <InputCustom
-                        control={control as Control<FilterFormInterface>}
                         name='kw'
                         label='Search'
+                        rules={[{ required: false }, { type: 'string', max: 100 }]}
                         placeholder='Search ...'
                         prefix={<SearchOutlined />}
                     />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={4}>
                     <AutoCompleteServerSearch
-                        control={control as Control<FilterFormInterface>}
                         name='professionId'
                         label='Profession'
-                        placeholder='Choose profession'
+                        placeholder="Choose profession"
+                        modelUrl={userService.MODEL_URL}
                     />
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={4}>
                     <RadioCustom
-                        control={control as Control<FilterFormInterface>}
                         name='roleName'
                         label='Role'
                         options={[{ id: ROLE.ADMIN, name: "Admin" }, { id: ROLE.CUSTOMER, name: "Customer" }]}
@@ -76,7 +68,6 @@ const FilterForm = () => {
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={4}>
                     <RadioCustom
-                        control={control as Control<FilterFormInterface>}
                         name='isActive'
                         label='Active'
                         options={[{ id: true, name: "Active" }, { id: false, name: "Inactive" }]}
@@ -85,7 +76,6 @@ const FilterForm = () => {
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={5}>
                     <RadioCustom
-                        control={control as Control<FilterFormInterface>}
                         name='isEmailVerified'
                         label='Email Verified'
                         options={[{ id: true, name: "Verified" }, { id: false, name: "Unverified" }]}
@@ -99,7 +89,7 @@ const FilterForm = () => {
                     <Button type="primary" icon={<SearchOutlined />} htmlType='submit'>
                         Search
                     </Button>
-                    <Button type="default" icon={<ReloadOutlined />}>
+                    <Button type="default" icon={<ReloadOutlined />} htmlType='button' onClick={handleResetForm}>
                         Reset
                     </Button>
                 </Space>

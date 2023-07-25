@@ -1,3 +1,3 @@
-export {default as ApproadList} from './List'
-export {default as ApproadAdd} from './Add'
-export {default as ApproadEdit} from './Edit'
+export {default as ApproachList} from './List'
+export {default as ApproachAdd} from './Add'
+export {default as ApproachEdit} from './Edit'

@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { PAGE_SIZE } from '../../configs/settings';
 import TableRowAction from '../../components/common/TableRowAction';
-import { UserFilterForm } from '../../components/user';
+import { UserFilterForm } from '../../components/User';
 import TableHeaderAction from '../../components/common/TableHeaderAction';
 import { userService } from '../../services';
 
@@ -202,7 +202,7 @@ const List: React.FC = () => {
           <div style={{ marginTop: 20, marginBottom: 15 }}>
             <Collapse
               items={[{
-                key: 'FILTER', label: 'Filter', children:  <UserFilterForm />
+                key: 'FILTER', label: 'Filter', children:  <UserFilterForm onSubmit={(data) => {console.log(data)}}/>
               }]}
             />
           </div>

@@ -1,7 +1,8 @@
 import React from 'react'
-import { Controller } from 'react-hook-form';
-import { AutoComplete, Form } from 'antd'
+import { Form, Select } from 'antd'
+import { Rule } from 'antd/es/form';
 import useDebounce from '../../hooks/useDebounce';
+import { autocompleteService } from '../../services';
 
 type OptionType = {
     id: number | string;
@@ -9,22 +10,36 @@ type OptionType = {
 }
 
 type AutoCompleteServerSearchType = {
-    control: any;
     name: string;
     label?: string;
-    required?: boolean;
     placeholder?: string;
+    rules?: Rule[];
+    modelUrl: string
 }
 
 
-const AutoCompleteServerSearch: React.FC<AutoCompleteServerSearchType> = ({ control, name, label = "", required = false, placeholder = "" }) => {
+const AutoCompleteServerSearch: React.FC<AutoCompleteServerSearchType> = ({ name, label = "", placeholder = "", rules = [], modelUrl }) => {
     const [loading, setLoading] = React.useState<boolean>(false)
     const [searchText, setSearchText] = React.useState<string>("")
     const [options, setOptions] = React.useState<OptionType[]>([])
 
+
     const debounded = useDebounce(searchText, 300);
 
+    const fetchData = async (modelUrl: string) => {
+        try {
+            const res = await autocompleteService.getOptionsByModel(modelUrl)
+            const data = res.data
+
+            console.log(data)
+        } catch (error) {
+
+        }
+    }
+
     React.useEffect(() => {
+        // fetchData(modelUrl)
+
         setLoading(true)
         fetch(`https://jsonplaceholder.typicode.com/users/?q=${debounded}`).then(res => res.json()).then(data => {
             setOptions(data)
@@ -34,44 +49,28 @@ const AutoCompleteServerSearch: React.FC<AutoCompleteServerSearchType> = ({ cont
     const autocompleteOptions = React.useMemo(() => {
         return options.map(o => {
             return {
-                id: o.id,
-                value: o.email
+                value: o.id,
+                label: o.email
             }
         });
     }, [options])
 
     return (
-
-        <Controller
+        <Form.Item
             name={name}
-            control={control}
-            render={({ field, fieldState }) => (
-                <>
-                    <Form.Item
-                        name={name}
-                        label={label}
-                        required={required}
-                        hasFeedback
-                        validateStatus={loading ? "validating" : (fieldState.invalid ? "error" : "")}
-                        help={fieldState.invalid ? fieldState.error?.message : ""}
-                    >
-                        <AutoComplete
-                            options={autocompleteOptions}
-                            placeholder={placeholder}
-                            allowClear={true}
-                            onChange={(value) => {
-                                setSearchText(value)
-                            }}
-                            onSelect={(value, option) => {
-                                field.onChange(option.id)
-                            }}
-                            onClear={() => {
-                                field.onChange(null)
-                            }}
-                        />
-                    </Form.Item>
-                </>)}
-        />
+            label={label}
+            hasFeedback
+            rules={rules}
+            // validateStatus={loading ? "validating" : ""}
+        >
+            <Select
+                options={autocompleteOptions}
+                placeholder={placeholder}
+                allowClear={true}
+                showSearch={true}
+                onSearch={(value) => setSearchText(value)}
+            />
+        </Form.Item>
 
     )
 }

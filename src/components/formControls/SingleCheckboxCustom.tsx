@@ -1,24 +1,23 @@
 import React from 'react'
-import { Controller } from 'react-hook-form';
 import { Checkbox, Form } from 'antd'
+import { Rule } from 'antd/es/form';
 
 type SingleCheckboxCustomType = {
-    control: any;
     name: string;
     label?: string;
+    rules?: Rule[];
 }
 
-const SingleCheckboxCustom: React.FC<SingleCheckboxCustomType> = ({ control, name, label = "" }) => {
+const SingleCheckboxCustom: React.FC<SingleCheckboxCustomType> = ({ name, label = "", rules = [] }) => {
     return (
-        <Controller
+        <Form.Item
             name={name}
-            control={control}
-            render={({ field, fieldState }) => (
-                <>
-                    <Checkbox value={field.value} onChange={field.onChange}>{label}</Checkbox>
-                </>)
-            }
-        />
+            valuePropName="checked"
+            rules={rules}
+            style={{ marginBottom: 0 }}
+        >
+            <Checkbox >{label}</Checkbox>
+        </Form.Item>
     )
 }
 

@@ -1,9 +1,15 @@
 import React from 'react'
+import { ApproachAddContainer } from '../../containers/Approach'
 
 const Add: React.FC = () => {
   return (
-    <div>ADD</div>
+    <>
+      {/* Start: ApproachAddContainer */}
+      <ApproachAddContainer />
+      {/* End: ApproachAddContainer */}
+    </>
   )
 }
+
 
 export default Add

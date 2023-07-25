@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, theme } from 'antd'
-import { UserAddForm } from '../../components/user';
-import { AddFormInterface as UserAddFormInterface } from '../../components/user/interfaces';
+import { UserAddForm } from '../../components/User';
+import { AddFormInterface as UserAddFormInterface } from '../../components/User/interfaces';
 
 const Add: React.FC = () => {
   const {

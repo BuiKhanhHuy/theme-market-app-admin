@@ -1,44 +1,36 @@
 import React from 'react'
-import { Controller } from 'react-hook-form';
 import { Form, Input } from 'antd'
+import { Rule } from 'antd/es/form';
 
 type InputCustomType = {
-  control: any;
   name: string;
   label?: string;
-  required?: boolean;
+  rules?: Rule[];
   placeholder?: string;
   prefix?: React.ReactNode
+  type?: "text" | "password"
 }
 
-const InputCustom: React.FC<InputCustomType> = ({  control, name, label = "", required = false, placeholder = "", prefix = '' }) => {
+const InputCustom: React.FC<InputCustomType> = ({ name, label = "", rules = [], placeholder = "", prefix = '', type = "text" }) => {
   return (
-    <Controller
+    <Form.Item
       name={name}
-      control={control}
-      render={({ field, fieldState }) => (
-        <>
-          <Form.Item
-            required={required}
-            name={name}
-            label={label}
-            hasFeedback
-            validateStatus={fieldState.invalid ? "error" : ""}
-            help={fieldState.invalid ? fieldState.error?.message : ""}
-            initialValue={field.value}
-          >
-            <Input
-              allowClear={true}
-              placeholder={placeholder}
-              prefix={prefix ? prefix : ""}
-              value={field.value}
-              defaultValue={field.value}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-            />
-          </Form.Item>
-        </>)}
-    />
+      label={label}
+      hasFeedback
+      rules={rules}
+    >
+      {
+        type === "text" ?
+          <Input
+            allowClear={true}
+            placeholder={placeholder}
+            prefix={prefix ? prefix : ""}
+          /> :
+          <Input.Password allowClear={true} placeholder={placeholder}/>
+      }
+
+
+    </Form.Item>
   )
 }
 

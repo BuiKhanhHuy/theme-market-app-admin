@@ -1,33 +1,18 @@
 import React from 'react'
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Control, } from 'react-hook-form';
-import { Form } from 'antd'
+import { Form, message } from 'antd'
 import { ROLE } from '../../configs/settings';
 import { EditFormInterface } from './interfaces';
 import FormAction from '../common/FormAction';
 import InputCustom from '../formControls/InputCustom';
-import PasswordInputCustom from '../formControls/PasswordInputCustom';
 import SingleCheckboxCustom from '../formControls/SingleCheckboxCustom';
-import AutoCompleteCustom from '../formControls/AutoCompleteCustom';
 import AutoCompleteServerSearch from '../formControls/AutoCompleteServerSearch';
+import SelectCustom from '../formControls/SelectCustom';
+import { userService } from '../../services';
 
 const layout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 24 },
 };
-
-const schema = yup.object().shape({
-  email: yup.string().required().email().max(128),
-  firstName: yup.string().required().max(50),
-  lastName: yup.string().required().max(100),
-  professionId: yup.number().default(null).nullable(),
-  roleName: yup
-    .string().required(),
-  password: yup.string().required(),
-  isActive: yup.boolean().default(false),
-  isEmailVerified: yup.boolean().default(false)
-})
 
 interface EditFormProps {
   editData: EditFormInterface | null;
@@ -37,85 +22,105 @@ interface EditFormProps {
 const EditForm: React.FC<EditFormProps> = ({ editData, onSubmit }) => {
   const [form] = Form.useForm();
 
-  const { handleSubmit, setValue, reset, control } = useForm<EditFormInterface>({
-    resolver: yupResolver(schema),
-  });
-
   React.useEffect(() => {
-    console.log("EDIT DATA: ", editData)
-
     if (editData) {
-      reset((formValues) => ({
-        ...formValues,
-        ...editData,
-      }));
-    } else {
-      reset()
+      form.setFieldsValue(editData);
     }
-  }, [editData, reset]);
+  }, [editData, form])
+
+  const onFinish = (values: any) => {
+    message.success('Submit success!');
+    console.log(values)
+  };
 
   const handleResetForm = () => {
-    reset();
+    form.resetFields();
   }
 
   return (
     <Form
       {...layout}
       form={form}
-      onFinish={handleSubmit(onSubmit)}
+      onFinish={onFinish}
       style={{ maxWidth: 1000 }}
+      initialValues={{
+        password: "",
+        professionId: null
+      }}
     >
+      {/* Start: Email */}
       <InputCustom
-        control={control as Control<EditFormInterface>}
         name='email'
         label='Email'
-        required={true}
+        rules={[{ required: true }, { type: 'email', max: 128 }]}
         placeholder='Enter email'
       />
+      {/* End: Email */}
+
+      {/* Start: First name */}
       <InputCustom
-        control={control as Control<EditFormInterface>}
         name='firstName'
         label='First name'
-        required={true}
+        rules={[{ required: true }, { type: 'string', max: 50 }]}
         placeholder='Enter first name'
       />
+      {/* End: First name */}
+
+      {/* Start: Last name */}
       <InputCustom
-        control={control as Control<EditFormInterface>}
         name='lastName'
         label='Last name'
-        required={true}
+        rules={[{ required: true }, { type: 'string', max: 100 }]}
         placeholder='Enter last name'
       />
+      {/* End: Last name */}
+
+      {/* Start: Profession id */}
       <AutoCompleteServerSearch
-        control={control as Control<EditFormInterface>}
         name='professionId'
         label='Profession'
-        placeholder='Choose profession'
+        placeholder="Choose profession"
+        modelUrl={userService.MODEL_URL}
       />
-      <PasswordInputCustom
-        control={control as Control<EditFormInterface>}
+      {/* End: Profession id */}
+
+      {/* Start: Password */}
+      <InputCustom
         name='password'
         label='Password'
-        required={true}
+        rules={[{ required: false }, { type: 'string', max: 100 }]}
         placeholder='Enter password'
+        type='password'
       />
-      <AutoCompleteCustom
-        control={control as Control<EditFormInterface>}
+      {/* End: Password */}
+
+      {/* Start: Role name */}
+      <SelectCustom
         name='roleName'
         label='Role'
-        required={true}
-        options={[{ id: ROLE.ADMIN, name: "Admin" }, { id: ROLE.CUSTOMER, name: "Customer" }]}
+        rules={[{ required: true }, { type: 'string' }]}
         placeholder='Choose role'
+        options={
+          [{ id: ROLE.ADMIN, name: "Admin" }, { id: ROLE.CUSTOMER, name: "Customer" }]
+        }
       />
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-        {/* <Space direction='vertical' size="middle">
-          <SingleCheckboxCustom control={control as Control<EditFormInterface>} name='isEmailVerified' label='Email verified' />
-          <SingleCheckboxCustom control={control as Control<EditFormInterface>} name='isActive' label='Active' />
-        </Space> */}
+      {/* End: Role name */}
+
+      <Form.Item wrapperCol={{ offset: 6 }}>
+        {/* Start: Email verified */}
+        <SingleCheckboxCustom name="isEmailVerified" label='Email verified' rules={[{ required: false }]} />
+        {/* End: Email verified */}
+
+        {/* Start: Active */}
+        <SingleCheckboxCustom name="isActive" label='Active' rules={[{ required: false }]} />
+        {/* End: Active */}
       </Form.Item>
+
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
         {/* Start: FormAction */}
-        <FormAction onReset={handleResetForm} />
+        <FormAction
+          onReset={handleResetForm}
+        />
 
         {/* End: FormAction */}
       </Form.Item>

@@ -5,9 +5,9 @@ import DefaultLayout from './layouts/DefaultLayout';
 
 import Loader from "./common/Loader";
 
-const ConfessionList = lazy(() => import('./pages/Confession').then(module => ({ default: module.ConfessionList })));
-const ConfessionAdd = lazy(() => import('./pages/Confession').then(module => ({ default: module.ConfessionAdd })));
-const ConfessionEdit = lazy(() => import('./pages/Confession').then(module => ({ default: module.ConfessionEdit })));
+const ProfessionList = lazy(() => import('./pages/Profession').then(module => ({ default: module.ProfessionList })));
+const ProfessionAdd = lazy(() => import('./pages/Profession').then(module => ({ default: module.ProfessionAdd })));
+const ProfessionEdit = lazy(() => import('./pages/Profession').then(module => ({ default: module.ProfessionEdit })));
 
 const UserList = lazy(() => import('./pages/User').then(module => ({ default: module.UserList })));
 const UserAdd = lazy(() => import('./pages/User').then(module => ({ default: module.UserAdd })));
@@ -57,9 +57,9 @@ const ContactList = lazy(() => import('./pages/Contact').then(module => ({ defau
 const ContactAdd = lazy(() => import('./pages/Contact').then(module => ({ default: module.ContactAdd })));
 const ContactEdit = lazy(() => import('./pages/Contact').then(module => ({ default: module.ContactEdit })));
 
-const ApproadList = lazy(() => import('./pages/Approach').then(module => ({ default: module.ApproadList })));
-const ApproadAdd = lazy(() => import('./pages/Approach').then(module => ({ default: module.ApproadAdd })));
-const ApproadEdit = lazy(() => import('./pages/Approach').then(module => ({ default: module.ApproadEdit })));
+const ApproachList = lazy(() => import('./pages/Approach').then(module => ({ default: module.ApproachList })));
+const ApproachAdd = lazy(() => import('./pages/Approach').then(module => ({ default: module.ApproachAdd })));
+const ApproachEdit = lazy(() => import('./pages/Approach').then(module => ({ default: module.ApproachEdit })));
 
 const EstimateBudgetList = lazy(() => import('./pages/EstimateBudget').then(module => ({ default: module.EstimateBudgetList })));
 const EstimateBudgetAdd = lazy(() => import('./pages/EstimateBudget').then(module => ({ default: module.EstimateBudgetAdd })));
@@ -89,12 +89,12 @@ function App() {
           {/* <Route index element={<Dashboard />} /> */}
 
           {/* Start: profiles */}
-          <Route path="confession">
+          <Route path="profession">
             <Route
               path=""
               element={
                 <Suspense fallback={<Loader />}>
-                  <ConfessionList />
+                  <ProfessionList />
                 </Suspense>
               }
             />
@@ -102,15 +102,15 @@ function App() {
               path="add"
               element={
                 <Suspense fallback={<Loader />}>
-                  <ConfessionAdd />
+                  <ProfessionAdd />
                 </Suspense>
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
-                  <ConfessionEdit />
+                  <ProfessionEdit />
                 </Suspense>
               }
             />
@@ -162,7 +162,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <CategoryEdit />
@@ -188,7 +188,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <ProductTypeEdit />
@@ -214,7 +214,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <TagEdit />
@@ -240,7 +240,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <ProductEdit />
@@ -266,7 +266,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <SavedProductEdit />
@@ -295,7 +295,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <PaymentTypeEdit />
@@ -321,7 +321,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <PaymentStatusEdit />
@@ -347,7 +347,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <OrderEdit />
@@ -376,7 +376,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <BlogEdit />
@@ -406,7 +406,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <ContactTypeEdit />
@@ -432,7 +432,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <ContactEdit />
@@ -443,12 +443,12 @@ function App() {
           {/* End: contacts */}
 
           {/* Start: hires */}
-          <Route path="approad">
+          <Route path="approach">
             <Route
               path=""
               element={
                 <Suspense fallback={<Loader />}>
-                  <ApproadList />
+                  <ApproachList />
                 </Suspense>
               }
             />
@@ -456,15 +456,15 @@ function App() {
               path="add"
               element={
                 <Suspense fallback={<Loader />}>
-                  <ApproadAdd />
+                  <ApproachAdd />
                 </Suspense>
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
-                  <ApproadEdit />
+                  <ApproachEdit />
                 </Suspense>
               }
             />
@@ -487,7 +487,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <EstimateBudgetEdit />
@@ -513,7 +513,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <ServicePackageEdit />
@@ -539,7 +539,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <TimelineEdit />
@@ -565,7 +565,7 @@ function App() {
               }
             />
             <Route
-              path="edit"
+              path=":id/edit"
               element={
                 <Suspense fallback={<Loader />}>
                   <HireEdit />

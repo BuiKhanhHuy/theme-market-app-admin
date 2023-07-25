@@ -1,8 +1,13 @@
 import React from 'react'
+import { ApproachEditContainer } from '../../containers/Approach'
 
 const Edit: React.FC = () => {
     return (
-        <div>Edit</div>
+        <>
+            {/* Start: ApproachEditContainer */}
+            <ApproachEditContainer />
+            {/* End: ApproachEditContainer */}
+        </>
     )
 }
 

@@ -1,9 +1,13 @@
-import React from 'react'
+import { ApproachListContainer } from "../../containers/Approach";
 
-const List = () => {
+const List: React.FC = () => {
   return (
-    <div>List</div>
-  )
-}
+    <>
+      {/* Start: ApproachListContainer */}
+      <ApproachListContainer />
+      {/* End: ApproachListContainer */}
+    </>
+  );
+};
 
 export default List
