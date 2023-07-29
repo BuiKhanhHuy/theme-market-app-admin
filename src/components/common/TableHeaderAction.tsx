@@ -25,7 +25,7 @@ const TableHeaderAction: React.FC<TableHeaderActionProps> = ({ addLink, idList, 
                 </Button>
             </Link>
             <Button danger type="primary" icon={<DeleteOutlined />} disabled={!hasSelected} onClick={() => onDeleteMany(idList)} >
-                Delete  {hasSelected ? `${idList.length} items` : ''}
+                Delete  {hasSelected ? `${idList.length} records` : ''}
             </Button>
             <Button icon={<FileExcelOutlined />} onClick={() => onExport(idList)}>Export to Excel</Button>
         </Space>

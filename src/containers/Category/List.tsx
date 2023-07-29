@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, Collapse, Table, theme } from 'antd';
+import { Card, Collapse, Table, message, theme } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import errorHandler from '../../utils/errorHandler';
 import type { SorterResult } from 'antd/es/table/interface';
 import { PAGE_SIZE } from '../../configs/settings';
 import TableRowAction from '../../components/common/TableRowAction';
@@ -35,7 +36,10 @@ const getColumns = (onReview: (id: number | string) => void, onDelete: (id: numb
     },
     {
       title: 'Action',
+      dataIndex: '',
       key: 'action',
+      fixed: 'right',
+      width: 100,
       render: (_, record) => (
         <TableRowAction id={record.id} onReview={onReview} onDelete={onDelete} editLink={`/category/${record.id}/edit`} />
       ),
@@ -120,7 +124,16 @@ const List: React.FC = () => {
    * @param id 
    */
   const handleDeleteById = (id: number | string) => {
-    alert("Delete: " + id)
+    // const deleteProfession = async (professionId: number | string) => {
+    //   try {
+    //     await professionService.deleteProfessionById(professionId)
+    //     message.success("Delete sucess")
+    //   } catch (error) {
+    //     errorHandler(error);
+    //   }
+    // }
+
+    // deleteProfession(id)
   }
 
   /**

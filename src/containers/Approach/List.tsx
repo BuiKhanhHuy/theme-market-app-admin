@@ -35,7 +35,10 @@ const getColumns = (onReview: (id: number | string) => void, onDelete: (id: numb
     },
     {
       title: 'Action',
+      dataIndex: '',
       key: 'action',
+      fixed: 'right',
+      width: 100,
       render: (_, record) => (
         <TableRowAction id={record.id} onReview={onReview} onDelete={onDelete} editLink={`/approach/${record.id}/edit`} />
       ),

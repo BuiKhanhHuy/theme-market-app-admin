@@ -1,7 +1,7 @@
 import httpRequest from '../utils/httpRequest';
 
 type ParamsType = {
-  kw?: string;
+  q?: string;
   professionId?: number | null;
   roleName?: string | null;
   isEmailVerified?: boolean | null;
@@ -16,26 +16,32 @@ export const getUserList = (params: ParamsType) => {
   return httpRequest.get(url, { params: params });
 };
 
-//   addEducationsDetail: (data) => {
-//     const url = `api/info/web/educations-detail/`;
-
-//     return httpRequest.post(url, data);
-//   },
-
 export const getUserById = (id: number | string) => {
   const url = MODEL_URL + `/${id}/`;
 
   return httpRequest.get(url);
 };
 
-//   updateEducationDetailById: (id: IdType, data) => {
-//     const url = `api/info/web/educations-detail/${id}/`;
+export const addUser = (data: any) => {
+  const url = MODEL_URL + '/';
 
-//     return httpRequest.put(url, data);
-//   },
+  return httpRequest.post(url, data);
+};
 
-//   deleteEducationDetailById: (id: IdType) => {
-//     const url = `api/info/web/educations-detail/${id}/`;
+export const updateUserById = (id: number | string, data: any) => {
+  const url = MODEL_URL + `/${id}/`;
 
-//     return httpRequest.delete(url);
-//   },
+  return httpRequest.put(url, data);
+};
+
+export const deleteUserById = (id: number | string) => {
+  const url = MODEL_URL + `/${id}/`;
+
+  return httpRequest.delete(url);
+};
+
+export const deleteUserWithIdList = (data: { idList: number[] }) => {
+  const url = MODEL_URL + `/delete-many`;
+
+  return httpRequest.post(url, data);
+};

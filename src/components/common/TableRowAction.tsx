@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { Button, Space } from 'antd'
+import { Button, Popconfirm, Space } from 'antd'
 import {
     EyeOutlined,
     EditOutlined,
     DeleteOutlined,
+    QuestionCircleOutlined
 } from '@ant-design/icons';
 
 type TableRowActionType = {
@@ -21,7 +22,19 @@ const TableRowAction: React.FC<TableRowActionType> = ({ id, onReview, onDelete, 
             <Link to={editLink}>
                 <Button shape="circle" icon={<EditOutlined />} />
             </Link>
-            <Button shape="circle" danger icon={<DeleteOutlined />} onClick={() => onDelete(id)} />
+            <Popconfirm
+                placement='bottomRight'
+                title="Delete the record"
+                description="Are you sure to delete this record?"
+                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                onConfirm={() => onDelete(id)}
+            >
+                <Button
+                    shape="circle"
+                    danger
+                    icon={<DeleteOutlined />}
+                />
+            </Popconfirm>
         </Space>
     )
 }
