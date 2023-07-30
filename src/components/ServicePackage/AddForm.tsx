@@ -1,5 +1,6 @@
 import React from 'react'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
 import { AddFormInterface } from './interfaces';
 import FormAction from '../common/FormAction';
 import InputCustom from '../formControls/InputCustom';
@@ -10,19 +11,20 @@ const layout = {
 };
 
 interface AddFormProps {
-  onSubmit: (data: AddFormInterface) => void;
+  onSubmit: (data: AddFormInterface, callback: (serverErrors: FieldData[]) => void) => void;
 }
 
 const AddForm: React.FC<AddFormProps> = ({ onSubmit }) => {
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    message.success('Submit success!');
-    onSubmit(values)
+  const handleServerError = (serverErrors: FieldData[]) => {
+    form.setFields(serverErrors);
   };
 
-  const onFinishFailed = () => {
-    message.error('Submit failed!');
+  const onFinish = (values: any) => {
+    onSubmit(values, handleServerError);
+
+    form.resetFields();
   };
 
   const handleResetForm = () => {
@@ -35,7 +37,6 @@ const AddForm: React.FC<AddFormProps> = ({ onSubmit }) => {
       form={form}
       style={{ maxWidth: 1000 }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
     >
       {/* Start: Name */}
       <InputCustom

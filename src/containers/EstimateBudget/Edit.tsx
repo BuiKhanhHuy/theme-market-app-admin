@@ -1,6 +1,8 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
-import { Card, Spin, theme } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, Spin, message, theme } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
+import errorHandler from '../../utils/errorHandler';
 import { EditFormInterface as EstimateBudgetEditFormInterface } from '../../components/EstimateBudget/interfaces';
 import { EstimateBudgetEditForm  } from '../../components/EstimateBudget';
 import { estimateBudgetService } from '../../services';
@@ -8,6 +10,7 @@ import { estimateBudgetService } from '../../services';
 const Edit: React.FC = () => {
     const { token: { colorBgContainer } } = theme.useToken();
     const { id } = useParams();
+    const nav = useNavigate()
     const [loading, setLoading] = React.useState<boolean>(true);
     const [editData, setEditData] = React.useState<EstimateBudgetEditFormInterface | null>(null)
 
@@ -30,8 +33,21 @@ const Edit: React.FC = () => {
     }, [id])
 
 
-    const handleSubmit = (data: EstimateBudgetEditFormInterface) => {
-        console.log(data);
+    const handleSubmit = (data: EstimateBudgetEditFormInterface, callback: (serverErrors: FieldData[]) => void) => {
+        const editEstimateBudget = async (id: string | number, estimateBudgetData: EstimateBudgetEditFormInterface) => {
+            try {
+                await estimateBudgetService.updateEstimateBudgetById(id, estimateBudgetData)
+                message.success("Update estimate budget success.")
+
+                nav(-1)
+            } catch (error) {
+                errorHandler(error, callback)
+            }
+        }
+
+        if (id) {
+            editEstimateBudget(id, data)
+        }
     }
 
     return (

@@ -1,13 +1,16 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
-import { Card, Spin, theme } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, Spin, message, theme } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
 import { EditFormInterface as TagEditFormInterface } from '../../components/Tag/interfaces';
+import errorHandler from '../../utils/errorHandler';
 import { TagEditForm } from '../../components/Tag';
 import { tagService } from '../../services';
 
 const Edit: React.FC = () => {
     const { token: { colorBgContainer } } = theme.useToken();
     const { id } = useParams();
+    const nav = useNavigate()
     const [loading, setLoading] = React.useState<boolean>(true);
     const [editData, setEditData] = React.useState<TagEditFormInterface | null>(null)
 
@@ -30,8 +33,21 @@ const Edit: React.FC = () => {
     }, [id])
 
 
-    const handleSubmit = (data: TagEditFormInterface) => {
-        console.log(data);
+    const handleSubmit = (data: TagEditFormInterface, callback: (serverErrors: FieldData[]) => void) => {
+        const editTag = async (id: string | number, tagData: TagEditFormInterface) => {
+            try {
+                await tagService.updateTagById(id, tagData)
+                message.success("Update profession success.")
+
+                nav(-1)
+            } catch (error) {
+                errorHandler(error, callback)
+            }
+        }
+
+        if (id) {
+            editTag(id, data)
+        }
     }
 
     return (

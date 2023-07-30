@@ -26,7 +26,10 @@ const errorHandler = (
           }
           break;
         default:
-          message.error(dataReponse.errors.join(', '));
+          Modal.error({
+            title: 'Error! ',
+            content: 'An error occurred. Please try again later!',
+          });
       }
     } else {
       Modal.error({

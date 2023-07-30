@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Col, Form, Row, Space, message } from 'antd'
+import { Button, Col, Form, Row, Space } from 'antd'
 import {
     SearchOutlined,
     ReloadOutlined
@@ -15,12 +15,12 @@ const FilterForm: React.FC<FilterFormProps> = ({ onSubmit }) => {
     const [form] = Form.useForm();
 
     const onFinish = (values: any) => {
-        message.success('Submit success!');
         onSubmit(values)
     };
 
     const handleResetForm = () => {
         form.resetFields();
+        onSubmit(form.getFieldsValue())
     }
 
     return (
@@ -29,13 +29,13 @@ const FilterForm: React.FC<FilterFormProps> = ({ onSubmit }) => {
             form={form}
             layout="vertical"
             initialValues={{
-                kw: "",
+                q: "",
             }}
         >
             <Row gutter={{ xs: 2, sm: 16, md: 24, lg: 32 }}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={7}>
                     <InputCustom
-                        name='kw'
+                        name='q'
                         label='Search'
                         rules={[{ required: false }, { type: 'string', max: 100 }]}
                         placeholder='Search ...'

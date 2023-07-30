@@ -55,7 +55,7 @@ const List: React.FC = () => {
     pagination: {
       current: 1,
       pageSize: PAGE_SIZE,
-      total: 100
+      total: 0
     },
     order: {
       sortField: "",
@@ -229,7 +229,8 @@ const List: React.FC = () => {
                 items={[{
                   key: 'FILTER',
                   label: 'Filter',
-                  children: <ProfessionFilterForm onSubmit={handleFilter}
+                  children: <ProfessionFilterForm 
+                  onSubmit={handleFilter}
                   />
                 }]}
               />
@@ -249,7 +250,8 @@ const List: React.FC = () => {
           </div>
         </div>
       </Card>
-      {contextHolder}</>
+      {contextHolder}
+    </>
   );
 };
 

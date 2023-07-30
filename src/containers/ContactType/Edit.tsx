@@ -1,6 +1,8 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
-import { Card, Spin, theme } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, Spin, message, theme } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
+import errorHandler from '../../utils/errorHandler';
 import { EditFormInterface as ContactTypeEditFormInterface } from '../../components/ContactType/interfaces';
 import { ContactTypeEditForm } from '../../components/ContactType';
 import { contactTypeService } from '../../services';
@@ -8,6 +10,7 @@ import { contactTypeService } from '../../services';
 const Edit: React.FC = () => {
     const { token: { colorBgContainer } } = theme.useToken();
     const { id } = useParams();
+    const nav = useNavigate()
     const [loading, setLoading] = React.useState<boolean>(true);
     const [editData, setEditData] = React.useState<ContactTypeEditFormInterface | null>(null)
 
@@ -30,8 +33,21 @@ const Edit: React.FC = () => {
     }, [id])
 
 
-    const handleSubmit = (data: ContactTypeEditFormInterface) => {
-        console.log(data);
+    const handleSubmit = (data: ContactTypeEditFormInterface, callback: (serverErrors: FieldData[]) => void) => {
+        const editContactType = async (id: string | number, contactTypeData: ContactTypeEditFormInterface) => {
+            try {
+                await contactTypeService.updateContactTypeById(id, contactTypeData)
+                message.success("Update contact type success.")
+
+                nav(-1)
+            } catch (error) {
+                errorHandler(error, callback)
+            }
+        }
+
+        if (id) {
+            editContactType(id, data)
+        }
     }
 
     return (

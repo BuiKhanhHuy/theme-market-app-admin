@@ -29,7 +29,6 @@ const AddForm: React.FC<AddFormProps> = ({ onSubmit }) => {
     form.resetFields();
   };
 
-
   const handleResetForm = () => {
     form.resetFields();
   }

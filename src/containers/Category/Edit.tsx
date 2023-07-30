@@ -1,6 +1,8 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
-import { Card, Spin, theme } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, Spin, message, theme } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
+import errorHandler from '../../utils/errorHandler';
 import { EditFormInterface as CategoryEditFormInterface } from '../../components/Category/interfaces';
 import { CategoryEditForm } from '../../components/Category';
 import { categoryService } from '../../services';
@@ -8,6 +10,7 @@ import { categoryService } from '../../services';
 const Edit: React.FC = () => {
     const { token: { colorBgContainer } } = theme.useToken();
     const { id } = useParams();
+    const nav = useNavigate()
     const [loading, setLoading] = React.useState<boolean>(true);
     const [editData, setEditData] = React.useState<CategoryEditFormInterface | null>(null)
 
@@ -30,8 +33,21 @@ const Edit: React.FC = () => {
     }, [id])
 
 
-    const handleSubmit = (data: CategoryEditFormInterface) => {
-        console.log(data);
+    const handleSubmit = (data: CategoryEditFormInterface, callback: (serverErrors: FieldData[]) => void) => {
+        const editCategory = async (id: string | number, categoryData: CategoryEditFormInterface) => {
+            try {
+                await categoryService.updateCategoryById(id, categoryData)
+                message.success("Update category success.")
+
+                nav(-1)
+            } catch (error) {
+                errorHandler(error, callback)
+            }
+        }
+
+        if (id) {
+            editCategory(id, data)
+        }
     }
 
     return (

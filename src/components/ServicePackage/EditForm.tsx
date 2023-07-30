@@ -1,5 +1,6 @@
 import React from 'react'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
 import { EditFormInterface } from './interfaces';
 import FormAction from '../common/FormAction';
 import InputCustom from '../formControls/InputCustom';
@@ -11,7 +12,7 @@ const layout = {
 
 interface EditFormProps {
   editData: EditFormInterface | null;
-  onSubmit: (data: EditFormInterface) => void;
+  onSubmit: (data: EditFormInterface, callback: (serverErrors: FieldData[]) => void) => void;
 }
 
 const EditForm: React.FC<EditFormProps> = ({ editData, onSubmit }) => {
@@ -23,9 +24,12 @@ const EditForm: React.FC<EditFormProps> = ({ editData, onSubmit }) => {
     }
   }, [editData, form])
 
+  const handleServerError = (serverErrors: FieldData[]) => {
+    form.setFields(serverErrors);
+  };
+
   const onFinish = (values: any) => {
-    message.success('Submit success!');
-    console.log(values)
+    onSubmit(values, handleServerError);
   };
 
   const handleResetForm = () => {

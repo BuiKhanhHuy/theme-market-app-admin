@@ -1,16 +1,31 @@
 import React from 'react'
-import { Card, theme } from 'antd'
+import { useNavigate } from 'react-router-dom';
+import { Card, message, theme } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
 import { AddFormInterface as ContactTypeAddFormInterface } from '../../components/ContactType/interfaces';
 import { ContactTypeAddForm  } from '../../components/ContactType';
 import { contactTypeService } from '../../services';
+import errorHandler from '../../utils/errorHandler';
 
 const Add: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const nav = useNavigate()
 
-  const handleSubmit = (data: ContactTypeAddFormInterface) => {
-    console.log(data)
+  const handleSubmit = (data: ContactTypeAddFormInterface, callback: (serverErrors: FieldData[]) => void) => {
+    const addContactType = async (contactTypeData: ContactTypeAddFormInterface) => {
+      try {
+        await contactTypeService.addContactType(contactTypeData)
+        message.success("Add contact type success.")
+
+        nav(-1)
+      } catch (error) {
+        errorHandler(error, callback)
+      }
+    }
+
+    addContactType(data)
   }
 
   return (

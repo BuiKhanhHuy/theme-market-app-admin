@@ -1,6 +1,8 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
-import { Card, Spin, theme } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, Spin, message, theme } from 'antd'
+import { FieldData } from 'rc-field-form/es/interface';
+import errorHandler from '../../utils/errorHandler';
 import { EditFormInterface as PaymentTypeEditFormInterface } from '../../components/PaymentType/interfaces';
 import { PaymentTypeEditForm } from '../../components/PaymentType';
 import { paymentTypeService } from '../../services';
@@ -8,6 +10,7 @@ import { paymentTypeService } from '../../services';
 const Edit: React.FC = () => {
     const { token: { colorBgContainer } } = theme.useToken();
     const { id } = useParams();
+    const nav = useNavigate()
     const [loading, setLoading] = React.useState<boolean>(true);
     const [editData, setEditData] = React.useState<PaymentTypeEditFormInterface | null>(null)
 
@@ -30,8 +33,21 @@ const Edit: React.FC = () => {
     }, [id])
 
 
-    const handleSubmit = (data: PaymentTypeEditFormInterface) => {
-        console.log(data);
+    const handleSubmit = (data: PaymentTypeEditFormInterface, callback: (serverErrors: FieldData[]) => void) => {
+        const editPaymentType = async (id: string | number, paymentTypeData: PaymentTypeEditFormInterface) => {
+            try {
+                await paymentTypeService.updatePaymentTypeById(id, paymentTypeData)
+                message.success("Update payment type success.")
+
+                nav(-1)
+            } catch (error) {
+                errorHandler(error, callback)
+            }
+        }
+
+        if (id) {
+            editPaymentType(id, data)
+        }
     }
 
     return (

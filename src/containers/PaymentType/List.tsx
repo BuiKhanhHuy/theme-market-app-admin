@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Collapse, Table, theme } from 'antd';
+import { Card, Collapse, Modal, Table, message, theme } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { SorterResult } from 'antd/es/table/interface';
 import { PAGE_SIZE } from '../../configs/settings';
+import errorHandler from '../../utils/errorHandler';
 import TableRowAction from '../../components/common/TableRowAction';
 import { PaymentTypeFilterForm } from '../../components/PaymentType';
 import TableHeaderAction from '../../components/common/TableHeaderAction';
@@ -15,8 +16,8 @@ interface DataType {
 
 interface TableParams {
   pagination?: TablePaginationConfig;
-  sortField?: string;
-  sortOrder?: string;
+  order: { sortField?: string, sortOrder?: string }
+  search: { q?: string }
 }
 
 const getColumns = (onReview: (id: number | string) => void, onDelete: (id: number | string) => void): ColumnsType<DataType> => {
@@ -45,13 +46,23 @@ const getColumns = (onReview: (id: number | string) => void, onDelete: (id: numb
 
 const List: React.FC = () => {
   const { token: { colorBgContainer } } = theme.useToken();
+  const [modal, contextHolder] = Modal.useModal();
   const [selectedRowKeys, setSelectedRowKeys] = React.useState<React.Key[]>([]);
   const [tableParams, setTableParams] = React.useState<TableParams>({
     pagination: {
       current: 1,
       pageSize: PAGE_SIZE,
+      total: 0
+    },
+    order: {
+      sortField: "",
+      sortOrder: "",
+    },
+    search: {
+      q: ""
     }
   });
+  const [isReload, setIsReload] = React.useState<boolean>(false);
   const [loadingData, setLoadingData] = React.useState<boolean>(false);
   const [data, setData] = React.useState<DataType[]>([]);
 
@@ -61,17 +72,22 @@ const List: React.FC = () => {
   const fetchData = async () => {
     setLoadingData(true)
     try {
-      const res = await paymentTypeService.getPaymentTypeList({})
-      const data = res.data
+      const res = await paymentTypeService.getPaymentTypeList({
+        page: tableParams.pagination?.current || "",
+        pageSize: tableParams.pagination?.pageSize || "",
+        ...tableParams.order,
+        ...tableParams.search
+      })
 
+      const data = res.data
       setData(data?.results)
-      // setTableParams({
-      //   ...tableParams,
-      //   pagination: {
-      //     ...tableParams.pagination,
-      //     total: data.totalCount,
-      //   },
-      // });
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: data.totalCount,
+        },
+      });
     } catch (error) {
     } finally {
       setLoadingData(false)
@@ -81,7 +97,15 @@ const List: React.FC = () => {
 
   React.useEffect(() => {
     fetchData();
-  }, [tableParams])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    tableParams.pagination?.pageSize,
+    tableParams.pagination?.current,
+    tableParams.order,
+    tableParams.search,
+    isReload
+  ])
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -97,9 +121,12 @@ const List: React.FC = () => {
     sorter: SorterResult<DataType>,
   ) => {
     setTableParams({
+      ...tableParams,
       pagination: pagination,
-      sortField: sorter.field?.toString(),
-      sortOrder: sorter.order?.toString()
+      order: {
+        sortField: sorter.field?.toString(),
+        sortOrder: sorter.order?.toString()
+      }
     });
 
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
@@ -107,12 +134,42 @@ const List: React.FC = () => {
     }
   };
 
+  const handleFilter = (data: any) => {
+    setTableParams({
+      ...tableParams,
+      search: {
+        ...tableParams.search,
+        ...data
+      }
+    });
+  }
+
+
   /**
    * Delete from id list
    * @param idList 
    */
   const handleDeleteMany = (idList: React.Key[]) => {
-    console.log("DELETE: ", idList)
+    const deletePaymentTypeWithIdList = async (paymentTypeIdList: number[]) => {
+      try {
+        await paymentTypeService.deletePaymentTypeWithIdList({
+          idList: paymentTypeIdList
+        })
+
+        setSelectedRowKeys([])
+        setIsReload(!isReload)
+        message.success("Delete success")
+      } catch (error) {
+        errorHandler(error);
+      }
+    }
+
+    modal.confirm({
+      title: `Are you sure delete ${selectedRowKeys.length} records?`,
+      content: 'Do you really want to delete these records. This process cannot be undone.',
+      okText: 'Delete',
+      onOk: () => deletePaymentTypeWithIdList(idList as number[])
+    })
   }
 
   /**
@@ -120,7 +177,18 @@ const List: React.FC = () => {
    * @param id 
    */
   const handleDeleteById = (id: number | string) => {
-    alert("Delete: " + id)
+    const deletePaymentType = async (paymentTypeId: number | string) => {
+      try {
+        await paymentTypeService.deletePaymentTypeById(paymentTypeId)
+
+        setIsReload(!isReload)
+        message.success(`Delete ${selectedRowKeys.length} records success`)
+      } catch (error) {
+        errorHandler(error);
+      }
+    }
+
+    deletePaymentType(id)
   }
 
   /**
@@ -142,35 +210,41 @@ const List: React.FC = () => {
 
 
   return (
-    <Card title="Payment types">
-      <div style={{ minHeight: 360, background: colorBgContainer }}>
-        <div>
-          {/* Start: TableHeaderAction */}
-          <TableHeaderAction addLink='/payment-type/add' idList={selectedRowKeys} onDeleteMany={handleDeleteMany} onExport={handleExport} />
-          {/* End: TableHeaderAction */}
+    <>
+      <Card title="Payment types">
+        <div style={{ minHeight: 360, background: colorBgContainer }}>
+          <div>
+            {/* Start: TableHeaderAction */}
+            <TableHeaderAction addLink='/payment-type/add' idList={selectedRowKeys} onDeleteMany={handleDeleteMany} onExport={handleExport} />
+            {/* End: TableHeaderAction */}
 
-          <div style={{ marginTop: 20, marginBottom: 15 }}>
-            <Collapse
-              items={[{
-                key: 'FILTER', label: 'Filter', children: <PaymentTypeFilterForm onSubmit={(data) => { console.log(data) }} />
-              }]}
+            <div style={{ marginTop: 20, marginBottom: 15 }}>
+              <Collapse
+                items={[{
+                  key: 'FILTER',
+                  label: 'Filter',
+                  children: <PaymentTypeFilterForm onSubmit={handleFilter}
+                  />
+                }]}
+              />
+            </div>
+
+            {/* Start: Table */}
+            <Table
+              loading={loadingData}
+              rowKey={(record) => record.id}
+              rowSelection={rowSelection}
+              columns={getColumns(handleReview, handleDeleteById)}
+              dataSource={data}
+              pagination={tableParams.pagination}
+              onChange={(pagination, _, sorterResult) => handleTableChange(pagination, sorterResult as SorterResult<DataType>)}
             />
+            {/* End: Table */}
           </div>
-
-          {/* Start: Table */}
-          <Table
-            loading={loadingData}
-            rowKey={(record) => record.id}
-            rowSelection={rowSelection}
-            columns={getColumns(handleReview, handleDeleteById)}
-            dataSource={data}
-            pagination={tableParams.pagination}
-            onChange={(pagination, _, sorterResult) => handleTableChange(pagination, sorterResult as SorterResult<DataType>)}
-          />
-          {/* End: Table */}
         </div>
-      </div>
-    </Card>
+      </Card>
+      {contextHolder}
+    </>
   );
 };
 

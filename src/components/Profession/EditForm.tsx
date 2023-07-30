@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
 import { FieldData } from 'rc-field-form/es/interface';
 import { EditFormInterface } from './interfaces';
 import FormAction from '../common/FormAction';
