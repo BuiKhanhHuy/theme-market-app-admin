@@ -30,7 +30,7 @@
  
  **For Backend**
  1. `git clone https://github.com/BuiKhanhHuy/theme-market-app-admin.git
- 2. `cd theme-market-app`
+ 2. `cd theme-market-app-admin`
  3. `npm install`
  4. `npm start`
  
